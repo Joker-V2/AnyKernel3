@@ -300,14 +300,14 @@ do_devicecheck() {
   for testname in $(grep '^device.name.*=' anykernel.sh | cut -d= -f2-); do
     for devicename in $device $product $vendordevice $vendorproduct; do
       if [ "$devicename" == "$testname" ]; then
-        ui_print "$testname" " ";
+        ui_print "- OK!";
         match=1;
         break 2;
       fi;
     done;
   done;
   if [ ! "$match" ]; then
-    abort " " "Unsupported device. Aborting...";
+    abort "Unsupported device, this device is $devicename. Aborting...!";
   fi;
 }
 int2ver() {
@@ -322,7 +322,7 @@ int2ver() {
 do_versioncheck() {
   [ "$(file_getprop anykernel.sh supported.versions)" ] || return 1;
   local android_ver hi_ver lo_ver parsed_ver supported supported_ver;
-  ui_print "Checking Android version...";
+  ui_print "- Checking Android version...";
   supported_ver=$(file_getprop anykernel.sh supported.versions | tr -d '[:space:]');
   android_ver=$(file_getprop /system/build.prop ro.build.version.release);
   parsed_ver=$(int2ver $android_ver);
@@ -341,9 +341,12 @@ do_versioncheck() {
     done;
   fi;
   if [ "$supported" ]; then
-    ui_print "$android_ver" " ";
+    ui_print "- Current Android version is supported.";
+    ui_print " ";
+    ui_print "Continuing with flashing process...";
   else
     abort " " "Unsupported Android version. Aborting...";
+    abort "- Currently Android $android_ver is unsupported. This kernel is only for Android $supported_ver. Aborting...!";
   fi;
 }
 do_levelcheck() {
@@ -364,9 +367,9 @@ do_levelcheck() {
     hi_lvl=9999-99;
   fi;
   if echo -e "$hi_lvl\n$lo_lvl\n$parsed_lvl" | sort -g | grep -n "$parsed_lvl" | grep -q '^2:'; then
-    ui_print "$android_lvl" " ";
+    ui_print ">> $android_lvl <<";
   else
-    abort " " "Unsupported Android security patch level. Aborting...";
+    abort "Unsupported Android security patch level. Aborting...!";
   fi;
 }
 do_vendorlevelcheck() {
@@ -470,7 +473,7 @@ do_modules() {
       /system/bin/chcon -hR "u:object_r:system_file:s0" $moddir;
       [ "$umountksu" ] && umount /data/adb/modules_update;
     else
-      ui_print "Magisk/KernelSU installation not found. Skipped!";
+      ui_print "- Magisk/KernelSU installation not found. Skipped!";
     fi;
   else
     cd $AKHOME/modules;
@@ -541,17 +544,31 @@ export PATH="$AKHOME/tools:$AKHOME/bin:$PATH";
 
 if [ -f banner ]; then
   ui_printfile banner;
-  ui_print " " " ";
+  ui_print " ";
 fi;
 
 KERNEL_STRING="$(file_getprop anykernel.sh kernel.string)";
-ui_print "$KERNEL_STRING";
+KERNEL_FOR="$(file_getprop anykernel.sh kernel.for)";
+KERNEL_COMPILER="$(file_getprop anykernel.sh kernel.compiler)";
+KERNEL_MADE="$(file_getprop anykernel.sh kernel.made)";
+KERNEL_VERSION="$(file_getprop anykernel.sh kernel.version)";
+BUILD_DATE="$(file_getprop anykernel.sh build.date)";
+MESSAGE_WORD="$(file_getprop anykernel.sh message.word)";
+DEVICE_NAME="$(getprop ro.product.device)";
+ui_print "-- Kernel name    : $KERNEL_STRING";
+ui_print "-- Kernel version : $KERNEL_VERSION";
+ui_print "-- Variant        : $KERNEL_FOR";
+ui_print "-- Compiler       : $KERNEL_COMPILER";
+ui_print "-- Device         : $DEVICE_NAME";
+ui_print "-- Build date     : $BUILD_DATE";
+ui_print "-- Maintainer     : $KERNEL_MADE";
+ui_print "_________________________________________________" " ";
 if [ -f version ]; then
   ui_print " ";
   ui_printfile version;
   ui_print " ";
 fi;
-ui_print " " "AnyKernel3 by osm0sis @ xda-developers" " ";
+ui_print "- Preparing environment setup...";
 grep -oE 'AK_BASE.*' META-INF/com/google/android/updater-script >&2;
 ui_print " ";
 
@@ -562,7 +579,8 @@ do_versioncheck;
 do_levelcheck;
 do_vendorlevelcheck;
 
-ui_print "Installing...";
+ui_print " ";
+ui_print "Flashing $KERNEL_STRING kernel...";
 ash anykernel.sh;
 if [ $? != 0 ]; then
   abort;
@@ -578,6 +596,13 @@ if [ "$(file_getprop anykernel.sh do.cleanup)" == 1 ]; then
   cleanup;
 fi;
 
-ui_print " " "Done!";
+ui_print "- Done";
+
+
+
+ui_print " " "_________________________________________________";
+
+
+ui_print " " "$MESSAGE_WORD" "_________________________________________________" " ";
 export PATH="$OLD_PATH";
 unset OLD_PATH OUTFD ZIPFILE;
