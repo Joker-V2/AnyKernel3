@@ -8,7 +8,6 @@ kernel.string=Xcalibur
 kernel.compiler=Neutron Clang
 kernel.made=Joker
 message.word=Thanks for choosing Xcalibur
-build.date=$(date)
 do.devicecheck=1
 do.cleanup=1
 device.name1=violet

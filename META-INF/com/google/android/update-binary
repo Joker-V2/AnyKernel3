@@ -550,7 +550,7 @@ fi;
 KERNEL_STRING="$(file_getprop anykernel.sh kernel.string)";
 KERNEL_COMPILER="$(file_getprop anykernel.sh kernel.compiler)";
 KERNEL_MADE="$(file_getprop anykernel.sh kernel.made)";
-BUILD_DATE="$(file_getprop anykernel.sh build.date)";
+BUILD_DATE=$(date +%Y-%m-%d)
 MESSAGE_WORD="$(file_getprop anykernel.sh message.word)";
 DEVICE_NAME="$(getprop ro.product.device)";
 ui_print "-- Kernel name    : $KERNEL_STRING";
