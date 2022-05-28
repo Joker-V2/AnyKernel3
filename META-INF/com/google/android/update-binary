@@ -550,13 +550,11 @@ fi;
 KERNEL_STRING="$(file_getprop anykernel.sh kernel.string)";
 KERNEL_COMPILER="$(file_getprop anykernel.sh kernel.compiler)";
 KERNEL_MADE="$(file_getprop anykernel.sh kernel.made)";
-BUILD_DATE=$(date +%Y-%m-%d)
 MESSAGE_WORD="$(file_getprop anykernel.sh message.word)";
 DEVICE_NAME="$(getprop ro.product.device)";
 ui_print "-- Kernel name    : $KERNEL_STRING";
 ui_print "-- Compiler       : $KERNEL_COMPILER";
 ui_print "-- Device         : $DEVICE_NAME";
-ui_print "-- Build date     : $BUILD_DATE";
 ui_print "-- Maintainer     : $KERNEL_MADE";
 ui_print "_________________________________________________" " ";
 if [ -f version ]; then
