@@ -4,12 +4,10 @@
 ### AnyKernel setup
 # global properties
 properties() { '
-kernel.string=
-kernel.for=
-kernel.compiler=
-kernel.made=
-kernel.version=
-message.word=
+kernel.string=Xcalibur
+kernel.compiler=Neutron Clang
+kernel.made=Joker
+message.word=Thanks for choosing Xcalibur
 build.date=$(date)
 do.devicecheck=1
 do.cleanup=1

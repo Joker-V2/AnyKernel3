@@ -548,16 +548,12 @@ if [ -f banner ]; then
 fi;
 
 KERNEL_STRING="$(file_getprop anykernel.sh kernel.string)";
-KERNEL_FOR="$(file_getprop anykernel.sh kernel.for)";
 KERNEL_COMPILER="$(file_getprop anykernel.sh kernel.compiler)";
 KERNEL_MADE="$(file_getprop anykernel.sh kernel.made)";
-KERNEL_VERSION="$(file_getprop anykernel.sh kernel.version)";
 BUILD_DATE="$(file_getprop anykernel.sh build.date)";
 MESSAGE_WORD="$(file_getprop anykernel.sh message.word)";
 DEVICE_NAME="$(getprop ro.product.device)";
 ui_print "-- Kernel name    : $KERNEL_STRING";
-ui_print "-- Kernel version : $KERNEL_VERSION";
-ui_print "-- Variant        : $KERNEL_FOR";
 ui_print "-- Compiler       : $KERNEL_COMPILER";
 ui_print "-- Device         : $DEVICE_NAME";
 ui_print "-- Build date     : $BUILD_DATE";
